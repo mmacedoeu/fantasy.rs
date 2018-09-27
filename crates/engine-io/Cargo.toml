@@ -1,0 +1,25 @@
+[package]
+authors = ["mmacedoeu <contato@mmacedo.eu.org>"]
+name = "engine-io"
+version = "0.1.0"
+[dependencies]
+actix = "0.7.4"
+bytes = "0.4.10"
+failure = "0.1.2"
+futures = "0.1"
+tokio-codec = "^0.1.0"
+
+[dependencies.core]
+path = "../core"
+
+[dependencies.flame]
+optional = true
+version = "0.2.2"
+
+[dependencies.flamer]
+optional = true
+git = "https://github.com/llogiq/flamer"
+
+[features]
+default = []
+flame_it = ["flame", "flamer"]

@@ -1,0 +1,19 @@
+name: fantasy
+author: "mmacedoeu <contato@mmacedo.eu.org>"
+about: Breath of Fantasy
+args:
+  - base:
+      short: b
+      value_name: base
+      help: Specify the base storage path.
+      takes_value: true
+  - players:
+      short: p
+      value_name: players
+      help: Number of players on battle
+      takes_value: true
+  - config:
+      short: f
+      value_name: config
+      help: File name with configuration parameters
+      takes_value: true      

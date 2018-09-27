@@ -1,0 +1,33 @@
+[package]
+authors = ["mmacedoeu <contato@mmacedo.eu.org>"]
+name = "bpm"
+version = "0.1.0"
+[dependencies]
+actix = "0.7.4"
+failure = "0.1.2"
+rand = "^0.5.5"
+
+[dependencies.core]
+path = "../core"
+
+[dependencies.engine-io]
+path = "../engine-io"
+
+[dependencies.flame]
+optional = true
+version = "0.2.2"
+
+[dependencies.flamer]
+git = "https://github.com/llogiq/flamer"
+optional = true
+
+[dev-dependencies]
+criterion = "^0.2.5"
+
+[[bench]]
+name = "turn_benchmark"
+harness = false
+
+[features]
+default = []
+flame_it = ["flame", "flamer"]

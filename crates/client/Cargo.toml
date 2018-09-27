@@ -1,0 +1,43 @@
+[package]
+authors = ["mmacedoeu <contato@mmacedo.eu.org>"]
+name = "client"
+version = "0.1.0"
+[dependencies]
+actix = "0.7.4"
+failure = "0.1.2"
+tokio = "0.1.8"
+
+[dependencies.app-dir]
+path = "../app-dir"
+
+[dependencies.bpm]
+path = "../bpm"
+
+[dependencies.clap]
+features = ["yaml"]
+version = "2.32.0"
+
+[dependencies.fconfig]
+path = "../fconfig"
+
+[dependencies.core]
+path = "../core"
+
+[dependencies.engine]
+path = "../engine"
+
+[dependencies.engine-io]
+path = "../engine-io"
+
+[dependencies.flame]
+optional = true
+version = "0.2.2"
+
+[dependencies.flamer]
+optional = true
+git = "https://github.com/llogiq/flamer"
+
+[features]
+default = []
+flame_it = ["flame", "flamer", "bpm/flame_it", "engine/flame_it", "engine-io/flame_it"]
+flame_init = []

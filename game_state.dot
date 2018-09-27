@@ -1,0 +1,12 @@
+digraph graphname {
+     Start -> WarmUp -> WaitPlayerInfo;
+     WarmUp -> Error;
+     WarmUp -> BattleAnnounce;
+     WaitPlayerInfo -> WarmUp;
+     WaitPlayerInfo -> Error;
+     BattleAnnounce -> Error;
+     BattleAnnounce -> BattleOn;
+     BattleOn -> BattleOn;
+     BattleOn -> BattleOver;
+     BattleOver -> Finish;
+ }

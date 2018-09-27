@@ -1,0 +1,39 @@
+[package]
+authors = ["mmacedoeu <contato@mmacedo.eu.org>"]
+name = "fantasy"
+version = "0.1.1"
+
+[workspace]
+members = [
+	"crates/app-dir",
+	"crates/bpm",
+	"crates/client",
+	"crates/fconfig",
+	"crates/core",
+	"crates/engine",
+	"crates/engine-io",
+]
+
+[dependencies]
+client = { path = "crates/client" }
+failure = "0.1.2"
+
+[dependencies.flame]
+optional = true
+version = "0.2.2"
+
+[dependencies.flamer]
+optional = true
+git = "https://github.com/llogiq/flamer"
+
+[features]
+default = []
+flame_it = ["flame", "flamer", "client/flame_it"]
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+[profile.bench]
+codegen-units = 1
+lto = true
+opt-level = 3

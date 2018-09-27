@@ -1,0 +1,39 @@
+[package]
+authors = ["mmacedoeu <contato@mmacedo.eu.org>"]
+name = "engine"
+version = "0.1.0"
+[dependencies]
+actix = "0.7.4"
+failure = "0.1.2"
+futures = "0.1"
+crossbeam-channel = "0.2.5"
+tokio = "0.1.8"
+
+[dependencies.state_machine_future]
+# default_features = false
+# features = ["debug_code_generation"]
+version = "0.1.7"
+
+[dependencies.bpm]
+path = "../bpm"
+
+[dependencies.fconfig]
+path = "../fconfig"
+
+[dependencies.core]
+path = "../core"
+
+[dependencies.engine-io]
+path = "../engine-io"
+
+[dependencies.flame]
+optional = true
+version = "0.2.2"
+
+[dependencies.flamer]
+optional = true
+git = "https://github.com/llogiq/flamer"
+
+[features]
+default = []
+flame_it = ["flame", "flamer", "bpm/flame_it", "engine-io/flame_it"]
