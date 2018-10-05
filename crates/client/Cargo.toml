@@ -4,6 +4,8 @@ name = "client"
 version = "0.1.0"
 [dependencies]
 actix = "0.7.4"
+atty = "0.2.11"
+crossbeam-channel = "0.2.6"
 failure = "0.1.2"
 tokio = "0.1.8"
 
@@ -17,9 +19,6 @@ path = "../bpm"
 features = ["yaml"]
 version = "2.32.0"
 
-[dependencies.fconfig]
-path = "../fconfig"
-
 [dependencies.core]
 path = "../core"
 
@@ -29,15 +28,18 @@ path = "../engine"
 [dependencies.engine-io]
 path = "../engine-io"
 
+[dependencies.fconfig]
+path = "../fconfig"
+
 [dependencies.flame]
 optional = true
 version = "0.2.2"
 
 [dependencies.flamer]
-optional = true
 git = "https://github.com/llogiq/flamer"
+optional = true
 
 [features]
 default = []
-flame_it = ["flame", "flamer", "bpm/flame_it", "engine/flame_it", "engine-io/flame_it"]
 flame_init = []
+flame_it = ["flame", "flamer", "bpm/flame_it", "engine/flame_it", "engine-io/flame_it"]

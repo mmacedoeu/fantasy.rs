@@ -2,8 +2,13 @@
 authors = ["mmacedoeu <contato@mmacedo.eu.org>"]
 name = "bpm"
 version = "0.1.0"
+[[bench]]
+harness = false
+name = "turn_benchmark"
+
 [dependencies]
 actix = "0.7.4"
+crossbeam-channel = "0.2.6"
 failure = "0.1.2"
 rand = "^0.5.5"
 
@@ -23,10 +28,6 @@ optional = true
 
 [dev-dependencies]
 criterion = "^0.2.5"
-
-[[bench]]
-name = "turn_benchmark"
-harness = false
 
 [features]
 default = []

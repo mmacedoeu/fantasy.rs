@@ -3,9 +3,7 @@ use core::{ClientAction, PlayerInfo, AttackType, TurnResultMsg};
 use engine_io::EnginePipeIo;
 use failure::Error;
 use rand::{self, Rng};
-use std::io;
 use std::slice::Iter;
-use std::str::FromStr;
 
 /// Generates a new random integer between 0 and 100
 #[cfg_attr(feature = "flame_it", flame)]
@@ -119,15 +117,8 @@ pub fn battle_turn(
     Ok(TurnResultMsg {
         hp: out_hp,
         next_turn: p2,
-        winner: winner,
+        winner,
     })
-}
-
-// TODO: refactor to come from Game IO Actor
-pub fn get_player_info() -> Result<PlayerInfo, Error> {
-    let mut input = String::new();
-    let _ = io::stdin().read_line(&mut input)?;
-    Ok(PlayerInfo::from_str(input.as_ref())?)
 }
 
 #[cfg_attr(feature = "flame_it", flame)]

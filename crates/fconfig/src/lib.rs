@@ -34,7 +34,7 @@ impl Default for AppConfig {
     fn default() -> Self {
         Self {
             players: Some(2),
-            range: vec![15, 70, 96],
+            range: vec![15, 70, 96, 100],
         }
     }
 }

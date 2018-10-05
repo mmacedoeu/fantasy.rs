@@ -5,9 +5,13 @@ version = "0.1.0"
 [dependencies]
 actix = "0.7.4"
 bytes = "0.4.10"
+crossbeam-channel = "0.2.6"
 failure = "0.1.2"
 futures = "0.1"
 tokio-codec = "^0.1.0"
+tokio-io = "0.1.9"
+tokio-reactor = "0.1.6"
+tokio-stdin-stdout = "0.1.4"
 
 [dependencies.core]
 path = "../core"
@@ -17,9 +21,14 @@ optional = true
 version = "0.2.2"
 
 [dependencies.flamer]
-optional = true
 git = "https://github.com/llogiq/flamer"
+optional = true
 
 [features]
 default = []
 flame_it = ["flame", "flamer"]
+[target."cfg(not(windows))".dependencies]
+tokio-file-unix = "0.5.1"
+[target."cfg(windows)".dependencies.winapi]
+features = ["handleapi", "namedpipeapi", "processenv", "winbase"]
+version = "0.3.5"

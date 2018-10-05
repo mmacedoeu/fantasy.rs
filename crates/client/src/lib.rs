@@ -19,6 +19,8 @@ extern crate tokio;
 extern crate app_dir as dirs;
 extern crate fconfig;
 extern crate core;
+extern crate atty;
+extern crate crossbeam_channel as channel;
 
 use actix::prelude::*;
 use dirs::Directories;
@@ -27,7 +29,8 @@ use engine_io::EnginePipeIo;
 use bpm::Bpm;
 use failure::Error;
 use std::path::Path;
-use core::StartBattleMsg;
+use core::{StartBattleMsg, PlayerInfo};
+use atty::{is, Stream};
 
 const CONFIG_FILENAME: &str = "Settings.toml";
 
@@ -109,9 +112,16 @@ where
     // Initialize the Stdin Stdout connector running in a thread-pool
     // with just one real thread
     #[cfg(feature="flame_init")]
-    flame::start("connector setup");     
-    let io_addr: Addr<EnginePipeIo> = SyncArbiter::start(1, move || {               
-        EnginePipeIo{}
+    flame::start("connector setup");  
+    let (s, r) = channel::bounded::<PlayerInfo>(1000);
+    let io_addr: Addr<EnginePipeIo> = EnginePipeIo::create(move |ctx| {
+        ctx.set_mailbox_capacity(1000);
+        let in_pipe = is(Stream::Stdin);
+        let out_pipe = is(Stream::Stdout);
+        let sender = s.clone();
+        let writer = None;
+        let writer_pipe = None;
+        EnginePipeIo{in_pipe, out_pipe, sender, writer, writer_pipe}
     });
     #[cfg(feature="flame_init")]
     flame::end("connector setup");     
@@ -122,7 +132,7 @@ where
     #[cfg(feature="flame_init")]
     flame::start("bpm setup");    
     let bpm_addr: Addr<Bpm> = SyncArbiter::start(1, move || {               
-        Bpm(io_addr_bpm.clone())
+        Bpm(io_addr_bpm.clone(), r.clone())
     });
     #[cfg(feature="flame_init")]
     flame::end("bpm setup");    

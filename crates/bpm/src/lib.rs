@@ -10,47 +10,48 @@
 //! BPM is sandboxed and it's only view to external world is externalities
 //! passed with BPM Actor inner initialization Engine IO message Box address
 //! In order to collect metrics like latency on runtime another Actor could
-//! be create to further export metrics to Analytics and monitoring platforms
+//! be created to further export metrics to Analytics and monitoring platforms
 //! like Graphene and others.
 #![cfg_attr(feature = "flame_it", feature(plugin, custom_attribute))]
 #![cfg_attr(feature = "flame_it", plugin(flamer))]
 
 #[cfg(feature = "flame_it")]
 extern crate flame;
-
+#[macro_use]
+extern crate failure;
 extern crate actix;
 extern crate core;
 extern crate engine_io;
-extern crate failure;
 extern crate rand;
+extern crate crossbeam_channel as channel;
 
 pub mod rules;
 
 use actix::{Actor, Addr, Handler, SyncContext};
 use core::{
     BattleAnnounceMsg, BattleTurnMsg, BattleWarmUpMsg, GetPlayerInfoMsg, PlayerInfo, TurnResultMsg,
-    WinnerMsg,
+    WinnerMsg
 };
 use engine_io::EnginePipeIo;
 
-pub struct Bpm(pub Addr<EnginePipeIo>);
+pub struct Bpm(pub Addr<EnginePipeIo>, pub channel::Receiver<PlayerInfo>);
 
 /// Turn EnginePipeIo into Actor enabled
 impl Actor for Bpm {
     type Context = SyncContext<Self>;
 }
 
-/// Message handling for type BattleWarmUp
+/// Message handling for type GetPlayerInfoMsg
 impl Handler<GetPlayerInfoMsg> for Bpm {
     type Result = Result<PlayerInfo, failure::Error>;
 
     #[cfg_attr(feature = "flame_it", flame)]
     fn handle(&mut self, _msg: GetPlayerInfoMsg, _ctx: &mut Self::Context) -> Self::Result {
-        rules::get_player_info()
+        self.1.recv().ok_or(format_err!("channel closed"))
     }
 }
 
-/// Message handling for type BattleWarmUp
+/// Message handling for type BattleWarmUpMsg
 impl Handler<BattleWarmUpMsg> for Bpm {
     type Result = Result<bool, failure::Error>;
 
@@ -60,7 +61,7 @@ impl Handler<BattleWarmUpMsg> for Bpm {
     }
 }
 
-/// Message handling for type BattleWarmUp
+/// Message handling for type BattleAnnounceMsg
 impl Handler<BattleAnnounceMsg> for Bpm {
     type Result = Result<(), failure::Error>;
 
@@ -70,7 +71,7 @@ impl Handler<BattleAnnounceMsg> for Bpm {
     }
 }
 
-/// Message handling for type BattleWarmUp
+/// Message handling for type BattleTurnMsg
 impl Handler<BattleTurnMsg> for Bpm {
     type Result = Result<TurnResultMsg, failure::Error>;
 
@@ -80,7 +81,7 @@ impl Handler<BattleTurnMsg> for Bpm {
     }
 }
 
-/// Message handling for type BattleWarmUp
+/// Message handling for type WinnerMsg
 impl Handler<WinnerMsg> for Bpm {
     type Result = Result<(), failure::Error>;
 
@@ -92,7 +93,6 @@ impl Handler<WinnerMsg> for Bpm {
 
 #[cfg(test)]
 mod tests {
-    use core::{PlayerInfo, TurnResultMsg};
     use rules;
     #[test]
     fn it_works() {
